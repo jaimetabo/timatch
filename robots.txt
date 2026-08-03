@@ -1,4 +1,4 @@
-# timatch.jaimetaboada.com
+# app.timatch.de
 # Normale Suchmaschinen duerfen crawlen, damit sie das
 # <meta name="robots" content="noindex"> in den Seiten lesen koennen.
 # Ein Disallow hier wuerde das Gegenteil bewirken: der Crawler koennte

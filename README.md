@@ -1,87 +1,77 @@
 # Timatch — Website
 
-Läuft unter **https://timatch.jaimetaboada.com** — Subdomain bei STRATO, gehostet auf GitHub Pages.
+Produktseite zur Timatch-App, live unter **https://app.timatch.de** — gehostet auf GitHub Pages.
 
-## Eingetragene URLs in App Store Connect
+Statisches HTML ohne Build-Schritt, zweisprachig DE/EN. Keine externen Skripte, Styles oder Fonts.
 
-| Feld | Sprache | URL |
+## ⚠️ In App Store Connect umzustellen
+
+Bis August 2026 lief die Seite unter `timatch.jaimetaboada.com`. Diese Adresse wurde aufgegeben. Folgende Felder müssen auf die neue Domain gezogen werden — **auch bei der tvOS-Version**:
+
+| Feld | Sprache | Neue URL |
 |---|---|---|
-| Marketing URL | EN + DE | `https://timatch.jaimetaboada.com/` |
-| Support URL | English (U.S.) | `https://timatch.jaimetaboada.com/support.html` |
-| Support URL | Deutsch | `https://timatch.jaimetaboada.com/hilfe.html` |
-| Privacy Policy URL | English (U.S.) | `https://timatch.jaimetaboada.com/privacy.html` |
-| Privacy Policy URL | Deutsch | `https://timatch.jaimetaboada.com/datenschutz.html` |
+| Marketing URL | EN + DE | `https://app.timatch.de/` |
+| Support URL | English (U.S.) | `https://app.timatch.de/support.html` |
+| Support URL | Deutsch | `https://app.timatch.de/hilfe.html` |
+| Privacy Policy URL | English (U.S.) | `https://app.timatch.de/privacy.html` |
+| Privacy Policy URL | Deutsch | `https://app.timatch.de/datenschutz.html` |
 
-Dieselben URLs sind auch bei der tvOS-Version hinterlegt. Der Apple-TV-Datenschutztext (Volltext, da tvOS keine URLs öffnen kann) verweist ebenfalls auf diese Domain.
+Der Apple-TV-Datenschutztext (Volltext, da tvOS keine URLs öffnen kann) nennt die Domain ebenfalls.
 
----
+## Deployment
 
-## Einrichtung — drei Schritte
-
-### 1. Repository anlegen und pushen
+Ein Push genügt — GitHub Pages baut selbstständig, rund 30 Sekunden:
 
 ```bash
-cd timatch-website
-git init
-git add .
-git commit -m "Timatch website"
-git branch -M main
-git remote add origin https://github.com/jaimetabo/timatch.git
-git push -u origin main
+git add -A && git commit -m "..." && git push
 ```
 
-Die Datei `CNAME` im Root ist Pflicht — GitHub Pages liest daraus die Custom Domain. Nicht löschen und nicht umbenennen.
+HTTPS stellt GitHub kostenlos bereit, auch für die eigene Domain, und erneuert das Let's-Encrypt-Zertifikat automatisch.
 
-### 2. DNS bei STRATO
+Die Datei `CNAME` im Root ist Pflicht — Pages liest daraus die Custom Domain. Nicht löschen und nicht umbenennen.
 
-STRATO-Kundenlogin → **Domains** → **Domainverwaltung** → `jaimetaboada.com` → **Verwaltung / DNS-Einstellungen**.
-
-Neuen Eintrag anlegen:
-
-| Typ | Name | Ziel |
-|---|---|---|
-| CNAME | `timatch` | `jaimetabo.github.io.` |
-
-Der Punkt am Ende gehört dazu, falls STRATO ihn verlangt.
-
-**Falls STRATO für diese Subdomain kein CNAME zulässt** (kommt vor, wenn die Subdomain zuvor als Webspace-Subdomain angelegt wurde): stattdessen vier A-Records auf dieselbe Subdomain:
+## Struktur
 
 ```
-185.199.108.153
-185.199.109.153
-185.199.110.153
-185.199.111.153
+index.html        Startseite
+hilfe.html        Hilfe (DE)
+support.html      Support (EN)
+datenschutz.html  Datenschutzerklärung (DE)
+privacy.html      Privacy Policy (EN)
+style.css         Styles
+robots.txt        Crawler-Regeln, KI-Crawler ausgeschlossen
+CNAME             Custom Domain für GitHub Pages
 ```
 
-Das sind die offiziellen GitHub-Pages-Adressen. Funktional gleichwertig, nur ohne automatische Anpassung, falls GitHub die IPs je ändert.
+## DNS
 
-Wichtig: Für `timatch` darf **kein** paralleler A-/AAAA-Eintrag auf `81.169.145.92` (STRATO-Webspace) stehen. CNAME und A-Record schließen sich gegenseitig aus.
+`app.timatch.de` ist ein CNAME auf `jaimetabo.github.io.`, verwaltet im STRATO-Kundenlogin unter dem Paket **TIMATCH** (Auftrag 7070811) → Domains → `timatch.de` → DNS.
 
-### 3. GitHub Pages aktivieren
+Die Domain `timatch.de` selbst bleibt unangetastet und zeigt weiterhin nach Hause.
 
-Repository → **Settings** → **Pages**
+Alternativ zum CNAME gehen auch vier A-Records auf dieselbe Subdomain — die offiziellen GitHub-Pages-Adressen `185.199.108.153`, `185.199.109.153`, `185.199.110.153`, `185.199.111.153`. Funktional gleichwertig, nur ohne automatische Anpassung, falls GitHub die IPs je ändert. CNAME und A-Record schließen sich gegenseitig aus.
 
-- Source: *Deploy from a branch* → Branch `main`, Ordner `/ (root)`
-- Custom domain: `timatch.jaimetaboada.com` → **Save**
-- Warten, bis der DNS-Check grün ist (kann bis zu einer Stunde dauern), dann **Enforce HTTPS** aktivieren
+## Warum nicht auf dem STRATO-Webspace?
 
-GitHub stellt automatisch ein Let's-Encrypt-Zertifikat aus und erneuert es selbstständig.
-
----
+Das TIMATCH-Paket ist ein reines Domain-Produkt ohne Webspace. Im Webhosting-Paket wäre `app.timatch.de` eine Subdomain — und STRATOs inklusives Zertifikat deckt nur die Hauptdomain plus `www` ab. Für Subdomains verlangt STRATO ein Wildcard-Zertifikat zu 30 €/Monat plus 100 € Einrichtung. GitHub Pages liefert dasselbe kostenlos.
 
 ## Vor der App-Store-Einreichung prüfen
 
 1. Alle fünf URLs im Browser öffnen — Apple ruft Support- und Privacy-URL im Review auf und lehnt bei 404 ab.
-2. `https://timatch.jaimetaboada.com` muss per **HTTPS** ohne Zertifikatswarnung laden.
-3. **Postanschrift eintragen:** In `privacy.html` und `datenschutz.html` steht die Adresse noch in eckigen Klammern. Ladungsfähige Anschrift nach Art. 13 DSGVO, bei kostenpflichtigem Angebot zusätzlich § 5 DDG.
+2. `https://app.timatch.de` muss per HTTPS ohne Zertifikatswarnung laden.
+3. **Postanschrift eintragen:** In `privacy.html` und `datenschutz.html` steht die Adresse noch in eckigen Klammern. Ladungsfähige Anschrift nach Art. 13 DSGVO, bei kostenpflichtigem Angebot zusätzlich § 5 DDG. *(offen)*
 
 ## Sichtbarkeit
 
-Alle Seiten tragen `<meta name="robots" content="noindex, nofollow">`. Sie sind über den Direktlink erreichbar, landen aber nicht im Google-Index, und von `jaimetaboada.com` führt kein Link hierher.
+Alle Seiten tragen `<meta name="robots" content="noindex, nofollow">`. Sie sind über den Direktlink erreichbar, landen aber nicht im Google-Index.
 
-Bewusst **kein** `Disallow` in der `robots.txt`: Ein gesperrter Crawler kann die Seite nicht laden und das `noindex` deshalb nie lesen — die URL könnte trotzdem im Index auftauchen. Die `robots.txt` sperrt nur KI-Crawler, analog zu deiner Hauptdomain.
+Bewusst **kein** `Disallow` in der `robots.txt`: Ein gesperrter Crawler kann die Seite nicht laden und das `noindex` deshalb nie lesen — die URL könnte trotzdem im Index auftauchen. Die `robots.txt` sperrt nur KI-Crawler, analog zur Hauptdomain.
 
 Wenn Timatch später auffindbar sein soll: die fünf `noindex`-Zeilen entfernen, pushen, fertig.
+
+## Kontakt
+
+Alle Kontaktadressen auf der Seite lauten `timatch@jaimetaboada.com`.
 
 ## Hinweis
 
