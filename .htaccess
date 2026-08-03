@@ -1,0 +1,39 @@
+# ============================================================
+#  timatch.jaimetaboada.com — Apache-Konfiguration (Strato-Webspace)
+# ============================================================
+# Auf GitHub Pages wurden HTTPS und Security-Header von der Plattform
+# gestellt. Auf dem Webspace uebernimmt das diese Datei.
+
+# ---- 1. HTTPS erzwingen ------------------------------------
+RewriteEngine On
+RewriteCond %{HTTPS} off
+RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# ---- 2. Standarddokument -----------------------------------
+DirectoryIndex index.html
+
+# ---- 3. Sicherheits-Header ---------------------------------
+<IfModule mod_headers.c>
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set X-Frame-Options "SAMEORIGIN"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  Header always set Permissions-Policy "geolocation=(), microphone=(), camera=(), interest-cohort=()"
+  Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
+  Header always set Cross-Origin-Opener-Policy "same-origin"
+  # Die Seite laedt ausschliesslich eigene Inhalte - keine externen Skripte,
+  # Styles oder Fonts. Die CSP darf daher maximal streng sein.
+  Header always set Content-Security-Policy "default-src 'self'; img-src 'self' data:; style-src 'self'; script-src 'none'; font-src 'self'; connect-src 'self'; form-action 'none'; frame-ancestors 'self'; base-uri 'self'; object-src 'none'"
+</IfModule>
+
+# ---- 4. Caching statischer Assets --------------------------
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType text/css "access plus 1 year"
+  ExpiresByType image/svg+xml "access plus 1 year"
+  ExpiresByType image/png "access plus 1 year"
+  ExpiresByType text/html "access plus 0 seconds"
+</IfModule>
+
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/css image/svg+xml
+</IfModule>
