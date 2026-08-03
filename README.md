@@ -59,7 +59,8 @@ Das TIMATCH-Paket ist ein reines Domain-Produkt ohne Webspace. Im Webhosting-Pak
 
 1. Alle fünf URLs im Browser öffnen — Apple ruft Support- und Privacy-URL im Review auf und lehnt bei 404 ab.
 2. `https://app.timatch.de` muss per HTTPS ohne Zertifikatswarnung laden.
-3. **Postanschrift eintragen:** In `privacy.html` und `datenschutz.html` steht die Adresse noch in eckigen Klammern. Ladungsfähige Anschrift nach Art. 13 DSGVO, bei kostenpflichtigem Angebot zusätzlich § 5 DDG. *(offen)*
+
+Die Anschrift ist **erledigt**: `privacy.html` und `datenschutz.html` nennen unter „Verantwortlicher" Name und E-Mail und verlinken für die vollständige Anschrift auf `jaimetaboada.com/impressum.html`, wo sie hinterlegt ist. Eine frühere Fassung dieses README behauptete, dort stünden noch Platzhalter in eckigen Klammern — das stimmte nicht.
 
 ## Sichtbarkeit
 
